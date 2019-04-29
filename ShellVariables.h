@@ -16,7 +16,6 @@ void displayVariables();
 void displayOneVariable(char **name);
 void checkSetVariables(char **args);
 
-void fail();
 void freeVar();
 
 #endif //EGGSHELL_SHELLVARIABLES_H

@@ -1,5 +1,6 @@
 #include "ShellVariables.h"
 #include "CommandlineInterpreter.h"
+#include "stdbool.h"
 
 const char internalComm [6][VAR_SIZE]= {"exit", "all", "=", "print", "chdir", "source"};
 
@@ -8,12 +9,15 @@ void commands(char *line);
 void internal(char *line, char **args);
 void redirect1(char *line);
 void forking(char **args);
+void setExitCode(int num);
 
+bool exitFlag = false;
 
 void commandlineInterpreter() {
     char *line;
 
     while ((line = linenoise(getenv("PROMPT"))) != NULL) {
+        exitFlag = false;
 
         if(strstr(line, ">")){
             redirect1(line);
@@ -22,6 +26,14 @@ void commandlineInterpreter() {
             commands(line);
         }
         linenoiseFree(line);
+
+        if(!exitFlag){
+            char error [50];
+            //setting EXITCODE with errno
+            sprintf(error, "%d", errno);
+
+            setenv("EXITCODE", error, 1);
+        }
     }
 }
 
@@ -108,11 +120,11 @@ void internal(char *line, char **args){
                 setenv("CWD", cwd, 1);
             } else {
                 perror("getcwd() error");
-                exit(EXIT_FAILURE);
+                setExitCode(errno);
             }
         } else {
             perror("chdir() error");
-            exit(EXIT_FAILURE);
+            setExitCode(errno);
         }
     }
     else if (strcmp(args[0], "source") == 0) {
@@ -126,6 +138,7 @@ void internal(char *line, char **args){
 
             if ((pipe = popen(buffer, "r")) == NULL) {
                 perror("popen");
+                setExitCode(errno);
             }
             //reading contents from buffer and executing them
             while (fgets(buffer, 1024, pipe) != NULL) {
@@ -138,6 +151,7 @@ void internal(char *line, char **args){
             }
             if (pclose(pipe) == -1) {
                 perror("pclose");
+                setExitCode(errno);
             }
         }
         else {
@@ -152,6 +166,7 @@ void redirect1(char *line){
     int saved_stdout;
 
     FILE *fp = NULL; //file pointer
+    int fd;
 
     if (strstr(line, ">>")){
         line1 = strtok(line, ">>");
@@ -159,9 +174,14 @@ void redirect1(char *line){
 
         /* Appends to a file. Writing operations, append data at the end of the file.
         * The file is created if it does not exist..*/
-        if ((fp = fopen(line2, "ab")) != NULL) {
+        if ((fp = fopen(line2, "ab+")) != NULL) {
             printf("--> File \"%s\" opened. <--\n", line2);
             fflush(stdout);
+        }
+
+        if ((fd = open(line2, O_APPEND | O_RDWR | O_CREAT, S_IRUSR | S_IWUSR)) == -1){
+            perror("dup() failed");
+            setExitCode(errno);
         }
     }
     else {
@@ -174,6 +194,11 @@ void redirect1(char *line){
             printf("--> File \"%s\" opened. <--\n", line2);
             fflush(stdout);
         }
+
+        if ((fd = open(line2, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR)) == -1){
+            perror("dup() failed");
+            setExitCode(errno);
+        }
     }
 
     if (fp == NULL){
@@ -183,19 +208,34 @@ void redirect1(char *line){
     }
 
     /* Save current stdout for use later */
-    saved_stdout = dup(STDOUT_FILENO);
+    if ((saved_stdout = dup(STDOUT_FILENO)) == -1){
+        perror("dup() failed");
+        setExitCode(errno);
+    }
 
-    int fd = open(line2, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+    // make stdout go to file
+    if ((dup2(fd, 1)) == -1){
+        perror("dup2() failed");
+        setExitCode(errno);
+    }
 
-    dup2(fd, 1);   // make stdout go to file
-    dup2(fd, 2);   // make stderr go to file
+    // make stderr go to file
+    if ((dup2(fd, 2)) == -1){
+        perror("dup2() failed");
+        setExitCode(errno);
+    }
+
     close(fd);
 
     fclose(fp); //closes file
     commands(line1);
 
     /* Restore stdout */
-    dup2(saved_stdout, STDOUT_FILENO);
+    if ((dup2(saved_stdout, STDOUT_FILENO)) == -1){
+        perror("dup2() failed");
+        setExitCode(errno);
+    }
+
     close(saved_stdout);
 
     printf("--> Output redirected to file <--\n");
@@ -209,18 +249,17 @@ void forking(char **args){
     time_t curtime;
     time(&curtime);
 
-    char result[50]; //to store string value of exit code
-
     pid_t pid = fork();
 
     if (pid == -1) {
         printf("%d\n", errno);
         perror("fork() failed");
-        fail();
+        setExitCode(errno);
+
     } else if (pid == 0) {
         if (execvp(args[0], args)) {
             perror("execvp() failed");
-            fail();
+            setExitCode(errno);
         }
 
         //dead code
@@ -248,7 +287,7 @@ void forking(char **args){
             else if (pid == -1) {
                 printf("%d\n", errno);
                 perror("Wait failed!");
-                fail();
+                setExitCode(errno);
             }
         } while (pid == 0);
 
@@ -260,8 +299,14 @@ void forking(char **args){
             setenv("PROMPT", prompt, 1);
         }
 
-        //setting EXITCODE with string value of status
-        sprintf(result, "%d", WEXITSTATUS(status));
-        setenv("EXITCODE", result, 1);
+       setExitCode(errno);
     }
+}
+
+void setExitCode(int num){
+    char error [50];
+    //setting EXITCODE with errno
+    sprintf(error, "%d", num);
+    setenv("EXITCODE", error, 1);
+    exitFlag = true;
 }

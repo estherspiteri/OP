@@ -1,6 +1,10 @@
+t 
+yup 
 UID         PID   PPID  C STIME TTY          TIME CMD
-espi0027  30617  30607  0 07:29 pts/0    00:00:00 bash
-espi0027  31158  30617  0 08:35 pts/0    00:00:00 ./eggshell
-espi0027  31167  31158  0 08:36 pts/0    00:00:00 ps -f
+espi0027   3680   3670  0 06:27 pts/0    00:00:00 bash
+espi0027   5076   3680  0 08:11 pts/0    00:00:00 ./eggshell
+espi0027   5087   5076  0 08:16 pts/0    00:00:00 ps -f
 Child exited with status of 0
-i0027
+
+execvp() failed: No such file or directory
+This string should never get printed

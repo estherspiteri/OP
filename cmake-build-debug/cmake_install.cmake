@@ -1,4 +1,4 @@
-# Install script for directory: /home/espi0027/Desktop/eggshell
+# Install script for directory: /home/espi0027/Desktop/OP
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/espi0027/Desktop/eggshell/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/espi0027/Desktop/OP/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

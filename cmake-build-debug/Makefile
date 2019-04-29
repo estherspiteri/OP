@@ -48,10 +48,10 @@ RM = /home/espi0027/opt/CLion-2018.3.4/clion-2018.3.4/bin/cmake/linux/bin/cmake 
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/espi0027/Desktop/eggshell
+CMAKE_SOURCE_DIR = /home/espi0027/Desktop/OP
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/espi0027/Desktop/eggshell/cmake-build-debug
+CMAKE_BINARY_DIR = /home/espi0027/Desktop/OP/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/espi0027/Desktop/eggshell/cmake-build-debug/CMakeFiles /home/espi0027/Desktop/eggshell/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/espi0027/Desktop/OP/cmake-build-debug/CMakeFiles /home/espi0027/Desktop/OP/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/espi0027/Desktop/eggshell/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/espi0027/Desktop/OP/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

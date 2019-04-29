@@ -182,11 +182,3 @@ void freeVar(){
     }
     free(varNames);
 }
-
-void fail(){
-    for (int i = 0; i < num; ++i) {
-        free(varNames[i]);
-    }
-    free(varNames);
-    exit(EXIT_FAILURE);
-}
