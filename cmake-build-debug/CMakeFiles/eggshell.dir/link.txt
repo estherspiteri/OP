@@ -1,0 +1,1 @@
+/usr/bin/gcc -g   CMakeFiles/eggshell.dir/eggshell.c.o  -o eggshell 

@@ -1,0 +1,6 @@
+UID         PID   PPID  C STIME TTY          TIME CMD
+espi0027  30617  30607  0 07:29 pts/0    00:00:00 bash
+espi0027  31158  30617  0 08:35 pts/0    00:00:00 ./eggshell
+espi0027  31167  31158  0 08:36 pts/0    00:00:00 ps -f
+Child exited with status of 0
+i0027
