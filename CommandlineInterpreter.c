@@ -4,10 +4,12 @@
 
 const char internalComm [6][VAR_SIZE]= {"exit", "all", "=", "print", "chdir", "source"};
 
+void running(char *line, char **args);
 int fileExists(char *filename);
 void commands(char *line);
 void internal(char *line, char **args);
-void redirect1(char *line);
+void redirectTo(char *line);
+void redirectFrom(char *line);
 void forking(char **args);
 void setExitCode(int num);
 
@@ -20,7 +22,10 @@ void commandlineInterpreter() {
         exitFlag = false;
 
         if(strstr(line, ">")){
-            redirect1(line);
+            redirectTo(line);
+        }
+        else if(strstr(line, "<")) {
+            redirectFrom(line);
         }
         else {
             commands(line);
@@ -62,7 +67,10 @@ void commands(char *line){
     }
     args[j] = (char *) NULL;
 
+    running(line, args);
+}
 
+void running(char *line, char **args){
     for (int i = 0; i < sizeof(internalComm)/VAR_SIZE; ++i) {
         if (strstr(args[0], internalComm[i])) {
             internal(line, args);
@@ -86,6 +94,7 @@ int fileExists(char *filename){
 }
 
 void internal(char *line, char **args){
+
     if (strcmp(args[0], "exit") == 0) {
         linenoiseFree(line);
         freeVar();
@@ -130,29 +139,27 @@ void internal(char *line, char **args){
     else if (strcmp(args[0], "source") == 0) {
 
         if (fileExists(args[1]) == 1) {
-            FILE *pipe = NULL;
-            char buffer[1024];
+            FILE *fp = NULL;
+            char word[1024];
 
-            //copying file contents to buffer
-            sprintf(buffer, "cat %s", args[1]);
-
-            if ((pipe = popen(buffer, "r")) == NULL) {
-                perror("popen");
-                setExitCode(errno);
+            //opens file
+            if ((fp = fopen(args[1], "rb")) != NULL) {
+                printf("-- File \"%s\" opened. --\n", args[1]);
             }
+
             //reading contents from buffer and executing them
-            while (fgets(buffer, 1024, pipe) != NULL) {
+            while (fgets(word, 1024, fp) != NULL) {
                 //to remove extra newline
-                int len = (int) strlen(buffer);
-                if (buffer[len - 1] == '\n') {
-                    buffer[len - 1] = 0;
+                int len = (int) strlen(word);
+                if (word[len - 1] == '\n') {
+                    word[len - 1] = '\0';
                 }
-                commands(buffer);
+                if(strcmp(word, "\0") != 0) {
+                    commands(word);
+                }
             }
-            if (pclose(pipe) == -1) {
-                perror("pclose");
-                setExitCode(errno);
-            }
+
+            fclose(fp);
         }
         else {
             printf("--> File does not exist <--\n");
@@ -160,51 +167,30 @@ void internal(char *line, char **args){
     }
 }
 
-void redirect1(char *line){
-    char *line1;
-    char *line2;
+void redirectTo(char *line){
+    char *command;
+    char *filename;
     int saved_stdout;
 
-    FILE *fp = NULL; //file pointer
     int fd;
 
     if (strstr(line, ">>")){
-        line1 = strtok(line, ">>");
-        line2 = strtok(NULL, ">>");
+        command = strtok(line, ">>");
+        filename = strtok(NULL, ">>");
 
-        /* Appends to a file. Writing operations, append data at the end of the file.
-        * The file is created if it does not exist..*/
-        if ((fp = fopen(line2, "ab+")) != NULL) {
-            printf("--> File \"%s\" opened. <--\n", line2);
-            fflush(stdout);
-        }
-
-        if ((fd = open(line2, O_APPEND | O_RDWR | O_CREAT, S_IRUSR | S_IWUSR)) == -1){
+        if ((fd = open(filename, O_APPEND | O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR)) == -1){
             perror("dup() failed");
             setExitCode(errno);
         }
     }
     else {
-        line1 = strtok(line, ">");
-        line2 = strtok(NULL, ">");
+        command = strtok(line, ">");
+        filename = strtok(NULL, ">");
 
-        /* Creates an empty file for writing. If file with the same name already exists,
-         * its content is erased and the file is considered as a new empty file.*/
-        if ((fp = fopen(line2, "wb")) != NULL) {
-            printf("--> File \"%s\" opened. <--\n", line2);
-            fflush(stdout);
-        }
-
-        if ((fd = open(line2, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR)) == -1){
+        if ((fd = open(filename, O_RDWR | O_CREAT | O_TRUNC , S_IRUSR | S_IWUSR)) == -1){
             perror("dup() failed");
             setExitCode(errno);
         }
-    }
-
-    if (fp == NULL){
-        fprintf(stderr, "--> Can't open \"%s\" file! <--\n", line2);
-        fflush(stdout);
-        return;
     }
 
     /* Save current stdout for use later */
@@ -227,8 +213,7 @@ void redirect1(char *line){
 
     close(fd);
 
-    fclose(fp); //closes file
-    commands(line1);
+    commands(command);
 
     /* Restore stdout */
     if ((dup2(saved_stdout, STDOUT_FILENO)) == -1){
@@ -240,6 +225,101 @@ void redirect1(char *line){
 
     printf("--> Output redirected to file <--\n");
     fflush(stdout);
+}
+
+void redirectFrom(char *line){
+    char *command;
+    char *args;
+    char temp[1024];
+    char *first;
+    char *two;
+
+    FILE *fp = NULL; //file pointer
+
+    if (strstr(line, "<<<")) {
+        char *hereString;
+
+        command = strtok(line, "<<<");
+        hereString = strtok(NULL, "<<<");
+
+        if((strtok(hereString, "*")) != NULL) {
+            hereString = strtok(NULL, "*");
+
+            strcpy(temp, command);
+            strcat(temp, hereString);
+
+            if(temp[strlen(temp) - 1] != ' ') {
+                strcat(temp, " ");
+            }
+
+            while(strstr(line = linenoise("*"), "*") == NULL) {
+                strcat(temp, line);
+
+                if(line[strlen(line) - 1] != ' ') {
+                    strcat(temp, " ");
+                }
+            }
+
+            if(strcmp(line, "*") != 0) {
+                strcat(temp, strtok(line, "*"));
+            }
+
+            //to add extra space
+            int lenC = (int) strlen(command);
+            if (command[lenC - 1] == 0) {
+                command[lenC - 1] = ' ';
+            }
+            commands(temp);
+        }
+    }
+    else {
+        char *filename;
+
+        command = strtok(line, "<");
+        filename = strtok(NULL, "<");
+
+        //to remove extra space
+        int len = (int) strlen(filename);
+        if (filename[len - 1] == ' ') {
+            filename[len - 1] = 0;
+        }
+
+        //to add extra space
+        int lenC = (int) strlen(command);
+        if (command[lenC - 1] == 0) {
+            command[lenC - 1] = ' ';
+        }
+
+        if (fileExists(filename) == 1) {
+            char word[1024];
+
+            //opens file
+            if ((fp = fopen(filename, "rb")) != NULL) {
+                printf("-- File \"%s\" opened. --\n", filename);
+            }
+
+            //reading contents from buffer and executing them
+            while (fgets(word, 1024, fp) != NULL) {
+
+                //to remove extra newline
+                int lenW = (int) strlen(word);
+                if (word[lenW - 1] == '\n') {
+                    word[lenW - 1] = '\0';
+                }
+
+                if(strcmp(word, "\0") != 0) {
+                    strcpy(temp, command);
+                    strcat(temp, word);
+
+                    commands(temp);
+                }
+            }
+            fclose(fp);
+        }
+        else {
+            printf("--> File does not exist <--\n");
+        }
+    }
 }
 
 void forking(char **args){
