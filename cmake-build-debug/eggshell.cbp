@@ -78,13 +78,22 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/espi0027/Desktop/OP/CommandlineInterpreter.c">
+			<Option target="eggshell"/>
+		</Unit>
 		<Unit filename="/home/espi0027/Desktop/OP/CommandlineInterpreter.h">
+			<Option target="eggshell"/>
+		</Unit>
+		<Unit filename="/home/espi0027/Desktop/OP/ShellVariables.c">
 			<Option target="eggshell"/>
 		</Unit>
 		<Unit filename="/home/espi0027/Desktop/OP/ShellVariables.h">
 			<Option target="eggshell"/>
 		</Unit>
 		<Unit filename="/home/espi0027/Desktop/OP/eggshell.c">
+			<Option target="eggshell"/>
+		</Unit>
+		<Unit filename="/home/espi0027/Desktop/OP/linenoise/linenoise.c">
 			<Option target="eggshell"/>
 		</Unit>
 		<Unit filename="/home/espi0027/Desktop/OP/linenoise/linenoise.h">

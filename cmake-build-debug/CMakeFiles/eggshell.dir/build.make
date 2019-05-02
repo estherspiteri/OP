@@ -70,17 +70,62 @@ CMakeFiles/eggshell.dir/eggshell.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/eggshell.dir/eggshell.c.s"
 	/usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/espi0027/Desktop/OP/eggshell.c -o CMakeFiles/eggshell.dir/eggshell.c.s
 
+CMakeFiles/eggshell.dir/linenoise/linenoise.c.o: CMakeFiles/eggshell.dir/flags.make
+CMakeFiles/eggshell.dir/linenoise/linenoise.c.o: ../linenoise/linenoise.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/espi0027/Desktop/OP/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/eggshell.dir/linenoise/linenoise.c.o"
+	/usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/eggshell.dir/linenoise/linenoise.c.o   -c /home/espi0027/Desktop/OP/linenoise/linenoise.c
+
+CMakeFiles/eggshell.dir/linenoise/linenoise.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/eggshell.dir/linenoise/linenoise.c.i"
+	/usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/espi0027/Desktop/OP/linenoise/linenoise.c > CMakeFiles/eggshell.dir/linenoise/linenoise.c.i
+
+CMakeFiles/eggshell.dir/linenoise/linenoise.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/eggshell.dir/linenoise/linenoise.c.s"
+	/usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/espi0027/Desktop/OP/linenoise/linenoise.c -o CMakeFiles/eggshell.dir/linenoise/linenoise.c.s
+
+CMakeFiles/eggshell.dir/ShellVariables.c.o: CMakeFiles/eggshell.dir/flags.make
+CMakeFiles/eggshell.dir/ShellVariables.c.o: ../ShellVariables.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/espi0027/Desktop/OP/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/eggshell.dir/ShellVariables.c.o"
+	/usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/eggshell.dir/ShellVariables.c.o   -c /home/espi0027/Desktop/OP/ShellVariables.c
+
+CMakeFiles/eggshell.dir/ShellVariables.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/eggshell.dir/ShellVariables.c.i"
+	/usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/espi0027/Desktop/OP/ShellVariables.c > CMakeFiles/eggshell.dir/ShellVariables.c.i
+
+CMakeFiles/eggshell.dir/ShellVariables.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/eggshell.dir/ShellVariables.c.s"
+	/usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/espi0027/Desktop/OP/ShellVariables.c -o CMakeFiles/eggshell.dir/ShellVariables.c.s
+
+CMakeFiles/eggshell.dir/CommandlineInterpreter.c.o: CMakeFiles/eggshell.dir/flags.make
+CMakeFiles/eggshell.dir/CommandlineInterpreter.c.o: ../CommandlineInterpreter.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/espi0027/Desktop/OP/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/eggshell.dir/CommandlineInterpreter.c.o"
+	/usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/eggshell.dir/CommandlineInterpreter.c.o   -c /home/espi0027/Desktop/OP/CommandlineInterpreter.c
+
+CMakeFiles/eggshell.dir/CommandlineInterpreter.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/eggshell.dir/CommandlineInterpreter.c.i"
+	/usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/espi0027/Desktop/OP/CommandlineInterpreter.c > CMakeFiles/eggshell.dir/CommandlineInterpreter.c.i
+
+CMakeFiles/eggshell.dir/CommandlineInterpreter.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/eggshell.dir/CommandlineInterpreter.c.s"
+	/usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/espi0027/Desktop/OP/CommandlineInterpreter.c -o CMakeFiles/eggshell.dir/CommandlineInterpreter.c.s
+
 # Object files for target eggshell
 eggshell_OBJECTS = \
-"CMakeFiles/eggshell.dir/eggshell.c.o"
+"CMakeFiles/eggshell.dir/eggshell.c.o" \
+"CMakeFiles/eggshell.dir/linenoise/linenoise.c.o" \
+"CMakeFiles/eggshell.dir/ShellVariables.c.o" \
+"CMakeFiles/eggshell.dir/CommandlineInterpreter.c.o"
 
 # External object files for target eggshell
 eggshell_EXTERNAL_OBJECTS =
 
 eggshell: CMakeFiles/eggshell.dir/eggshell.c.o
+eggshell: CMakeFiles/eggshell.dir/linenoise/linenoise.c.o
+eggshell: CMakeFiles/eggshell.dir/ShellVariables.c.o
+eggshell: CMakeFiles/eggshell.dir/CommandlineInterpreter.c.o
 eggshell: CMakeFiles/eggshell.dir/build.make
 eggshell: CMakeFiles/eggshell.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/espi0027/Desktop/OP/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable eggshell"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/espi0027/Desktop/OP/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable eggshell"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/eggshell.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -1,5 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/eggshell.dir/eggshell.c.o"
+  "CMakeFiles/eggshell.dir/linenoise/linenoise.c.o"
+  "CMakeFiles/eggshell.dir/ShellVariables.c.o"
+  "CMakeFiles/eggshell.dir/CommandlineInterpreter.c.o"
   "eggshell.pdb"
   "eggshell"
 )

@@ -1,1 +1,1 @@
-/usr/bin/gcc -g   CMakeFiles/eggshell.dir/eggshell.c.o  -o eggshell 
+/usr/bin/gcc -g   CMakeFiles/eggshell.dir/eggshell.c.o CMakeFiles/eggshell.dir/linenoise/linenoise.c.o CMakeFiles/eggshell.dir/ShellVariables.c.o CMakeFiles/eggshell.dir/CommandlineInterpreter.c.o  -o eggshell 

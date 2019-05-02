@@ -1,8 +1,7 @@
 #include "ShellVariables.h"
 #include "CommandlineInterpreter.h"
 #include "stdbool.h"
-
-const char internalComm [6][VAR_SIZE]= {"exit", "all", "=", "print", "chdir", "source"};
+#include "linenoise/linenoise.h"
 
 void running(char *line, char **args);
 int fileExists(char *filename);
@@ -10,6 +9,7 @@ void commands(char *line);
 void internal(char *line, char **args);
 void redirectTo(char *line);
 void redirectFrom(char *line);
+void piping(char *line);
 void forking(char **args);
 void setExitCode(int num);
 
@@ -17,6 +17,13 @@ bool exitFlag = false;
 
 void commandlineInterpreter() {
     char *line;
+
+    linenoiseHistorySetMaxLen(20);
+
+    /* Load history from file. The history file is just a plain text file
+    * where entries are separated by newlines. */
+    linenoiseHistoryLoad("history.txt"); /* Load the history at startup */
+
 
     while ((line = linenoise(getenv("PROMPT"))) != NULL) {
         exitFlag = false;
@@ -26,6 +33,9 @@ void commandlineInterpreter() {
         }
         else if(strstr(line, "<")) {
             redirectFrom(line);
+        }
+        else if(strstr(line, "|")){
+            piping(line);
         }
         else {
             commands(line);
@@ -43,6 +53,9 @@ void commandlineInterpreter() {
 }
 
 void commands(char *line){
+    linenoiseHistoryAdd(line); /* Add to the history. */
+    linenoiseHistorySave("history.txt"); /* Save the history on disk. */
+
     const char delim[2] = " ";
     char *token;
 
@@ -71,6 +84,8 @@ void commands(char *line){
 }
 
 void running(char *line, char **args){
+    char internalComm [6][VAR_SIZE]= {"exit", "all", "=", "print", "chdir", "source"};
+
     for (int i = 0; i < sizeof(internalComm)/VAR_SIZE; ++i) {
         if (strstr(args[0], internalComm[i])) {
             internal(line, args);
@@ -229,10 +244,9 @@ void redirectTo(char *line){
 
 void redirectFrom(char *line){
     char *command;
-    char *args;
     char temp[1024];
-    char *first;
-    char *two;
+
+    puts("yo");
 
     FILE *fp = NULL; //file pointer
 
@@ -322,6 +336,54 @@ void redirectFrom(char *line){
     }
 }
 
+void piping(char *line){
+    char *input;
+    char *output;
+
+#define READ_END	0
+#define WRITE_END	1
+
+    int saved_stdout;
+
+    input = strtok(line, "|");
+    output = strtok(NULL, "|");
+
+    pid_t pid;
+    int fd[2];
+
+    pipe(fd);
+    pid = fork();
+
+    if(pid==0)
+    {
+        dup2(fd[WRITE_END], STDOUT_FILENO);
+        close(fd[READ_END]);
+        close(fd[WRITE_END]);
+        commands(input);
+        exit(1);
+    }
+    else
+    {
+        pid=fork();
+
+        if(pid==0)
+        {
+            dup2(fd[READ_END], STDIN_FILENO);
+            close(fd[WRITE_END]);
+            close(fd[READ_END]);
+            commands(output);
+            exit(1);
+        }
+        else
+        {
+            int status;
+            close(fd[READ_END]);
+            close(fd[WRITE_END]);
+            waitpid(pid, &status, 0);
+        }
+    }
+}
+
 void forking(char **args){
     char prompt[PROMPT_VAR];
     int status;
@@ -337,19 +399,25 @@ void forking(char **args){
         setExitCode(errno);
 
     } else if (pid == 0) {
+        //child
         if (execvp(args[0], args)) {
             perror("execvp() failed");
             setExitCode(errno);
+            return;
         }
 
         //dead code
         printf("This string should never get printed\n");
 
-    } else {
+    }
+    else {
+        //parent
         do {
+            //pid of child
             pid = waitpid(pid, &status, WNOHANG); //wait until a state change in the child process
             //WNOHSNG --> checks child processes without causing the caller to be suspended
 
+            //check status of child
             if (pid > 0) {
                 if (WIFEXITED(status) > 0) {
                     //returned from main(), or else called the exit() or _exit() function
@@ -361,14 +429,12 @@ void forking(char **args){
                     sleep(1);
                 }
             }
-//                else if (pid == 0) {
-//                    printf("Status information is not available!\n");
-//                }
             else if (pid == -1) {
                 printf("%d\n", errno);
                 perror("Wait failed!");
                 setExitCode(errno);
             }
+
         } while (pid == 0);
 
 

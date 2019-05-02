@@ -3,4 +3,4 @@ project(eggshell C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(eggshell eggshell.c linenoise/linenoise.h ShellVariables.h CommandlineInterpreter.h)
+add_executable(eggshell eggshell.c  linenoise/linenoise.c ShellVariables.c CommandlineInterpreter.c)

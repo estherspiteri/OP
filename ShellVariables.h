@@ -4,13 +4,15 @@
 //#include "ShellVariables.c"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 #define PROMPT_VAR 20
 #define ARG 100
 
 
 //shell variables
-void setInitVariables();
+void setInitVariables(void);
 void setVariable(char *name, char *value);
 void displayVariables();
 void displayOneVariable(char **name);

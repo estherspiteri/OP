@@ -1,4 +1,3 @@
-#include <string.h>
 #include "ShellVariables.h"
 
 #define VAR_SIZE 10

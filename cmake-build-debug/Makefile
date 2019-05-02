@@ -123,6 +123,60 @@ eggshell/fast:
 	$(MAKE) -f CMakeFiles/eggshell.dir/build.make CMakeFiles/eggshell.dir/build
 .PHONY : eggshell/fast
 
+CommandlineInterpreter.o: CommandlineInterpreter.c.o
+
+.PHONY : CommandlineInterpreter.o
+
+# target to build an object file
+CommandlineInterpreter.c.o:
+	$(MAKE) -f CMakeFiles/eggshell.dir/build.make CMakeFiles/eggshell.dir/CommandlineInterpreter.c.o
+.PHONY : CommandlineInterpreter.c.o
+
+CommandlineInterpreter.i: CommandlineInterpreter.c.i
+
+.PHONY : CommandlineInterpreter.i
+
+# target to preprocess a source file
+CommandlineInterpreter.c.i:
+	$(MAKE) -f CMakeFiles/eggshell.dir/build.make CMakeFiles/eggshell.dir/CommandlineInterpreter.c.i
+.PHONY : CommandlineInterpreter.c.i
+
+CommandlineInterpreter.s: CommandlineInterpreter.c.s
+
+.PHONY : CommandlineInterpreter.s
+
+# target to generate assembly for a file
+CommandlineInterpreter.c.s:
+	$(MAKE) -f CMakeFiles/eggshell.dir/build.make CMakeFiles/eggshell.dir/CommandlineInterpreter.c.s
+.PHONY : CommandlineInterpreter.c.s
+
+ShellVariables.o: ShellVariables.c.o
+
+.PHONY : ShellVariables.o
+
+# target to build an object file
+ShellVariables.c.o:
+	$(MAKE) -f CMakeFiles/eggshell.dir/build.make CMakeFiles/eggshell.dir/ShellVariables.c.o
+.PHONY : ShellVariables.c.o
+
+ShellVariables.i: ShellVariables.c.i
+
+.PHONY : ShellVariables.i
+
+# target to preprocess a source file
+ShellVariables.c.i:
+	$(MAKE) -f CMakeFiles/eggshell.dir/build.make CMakeFiles/eggshell.dir/ShellVariables.c.i
+.PHONY : ShellVariables.c.i
+
+ShellVariables.s: ShellVariables.c.s
+
+.PHONY : ShellVariables.s
+
+# target to generate assembly for a file
+ShellVariables.c.s:
+	$(MAKE) -f CMakeFiles/eggshell.dir/build.make CMakeFiles/eggshell.dir/ShellVariables.c.s
+.PHONY : ShellVariables.c.s
+
 eggshell.o: eggshell.c.o
 
 .PHONY : eggshell.o
@@ -150,6 +204,33 @@ eggshell.c.s:
 	$(MAKE) -f CMakeFiles/eggshell.dir/build.make CMakeFiles/eggshell.dir/eggshell.c.s
 .PHONY : eggshell.c.s
 
+linenoise/linenoise.o: linenoise/linenoise.c.o
+
+.PHONY : linenoise/linenoise.o
+
+# target to build an object file
+linenoise/linenoise.c.o:
+	$(MAKE) -f CMakeFiles/eggshell.dir/build.make CMakeFiles/eggshell.dir/linenoise/linenoise.c.o
+.PHONY : linenoise/linenoise.c.o
+
+linenoise/linenoise.i: linenoise/linenoise.c.i
+
+.PHONY : linenoise/linenoise.i
+
+# target to preprocess a source file
+linenoise/linenoise.c.i:
+	$(MAKE) -f CMakeFiles/eggshell.dir/build.make CMakeFiles/eggshell.dir/linenoise/linenoise.c.i
+.PHONY : linenoise/linenoise.c.i
+
+linenoise/linenoise.s: linenoise/linenoise.c.s
+
+.PHONY : linenoise/linenoise.s
+
+# target to generate assembly for a file
+linenoise/linenoise.c.s:
+	$(MAKE) -f CMakeFiles/eggshell.dir/build.make CMakeFiles/eggshell.dir/linenoise/linenoise.c.s
+.PHONY : linenoise/linenoise.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -159,9 +240,18 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... eggshell"
 	@echo "... edit_cache"
+	@echo "... CommandlineInterpreter.o"
+	@echo "... CommandlineInterpreter.i"
+	@echo "... CommandlineInterpreter.s"
+	@echo "... ShellVariables.o"
+	@echo "... ShellVariables.i"
+	@echo "... ShellVariables.s"
 	@echo "... eggshell.o"
 	@echo "... eggshell.i"
 	@echo "... eggshell.s"
+	@echo "... linenoise/linenoise.o"
+	@echo "... linenoise/linenoise.i"
+	@echo "... linenoise/linenoise.s"
 .PHONY : help
 
 
